@@ -14,24 +14,25 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent, reactive, watchEffect } from 'vue'
 import {
   Header,
   MenuTab,
   Sidebar
 } from '@/components/layout/index.js'
-console.log(Header)
-export default {
-  data () {
+export default defineComponent({
+  setup () {
+    const collapsed = reactive(false)
+    console.log(collapsed)
     return {
-      collapsed: false
+      collapsed
     }
   },
   components: {
     Header,
     Sidebar
   }
-}
+})
 </script>
 
 <style lang="less">
