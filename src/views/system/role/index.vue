@@ -1,12 +1,12 @@
 <template>
   <div>
-    首页
+    角色页面
   </div>
 </template>
 <script>
 export default {
   mounted() {
-    console.log('首页')
+    console.log('角色页面')
   }
 }
 </script>
