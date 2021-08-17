@@ -1,12 +1,14 @@
 import { createStore } from 'vuex'
 import routers from './modules/router'
+// dynamic router permission control (Experimental)
+import permission from './modules/async-router'
 import getters from './getters'
+export const key = Symbol()
 
-const store = createStore({
+export default createStore({
   modules: {
-    routers
+    routers,
+    permission
   },
   getters
 })
-
-export default store

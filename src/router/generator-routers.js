@@ -1,5 +1,5 @@
 import { BasicLayout, BlankLayout, RouteView } from '@/layouts'
-const userNav = require('@/assets/json/userNav.json')
+import * as userNav from '@/assets/json/userNav.json'
 console.log(userNav);
 
 // 前端路由表

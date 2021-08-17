@@ -1,7 +1,7 @@
 <template>
   <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
     <div class="logo">
-      刚需买房
+      刚需买房 {{mainMenu}}
     </div>
     <div class="fang-menu">
       <a-menu
@@ -36,8 +36,8 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs } from 'vue'
-import { AppstoreOutlined, SettingOutlined } from '@ant-design/icons-vue';
+import { computed, defineComponent, reactive, toRefs } from 'vue'
+import { AppstoreOutlined, SettingOutlined } from '@ant-design/icons-vue'
 export default defineComponent({
   props: {
     collapsed: {
@@ -50,7 +50,7 @@ export default defineComponent({
       rootSubmenuKeys: ['sub1', 'sub2'],
       openKeys: ['sub1'],
       selectedKeys: ['1'],
-    });
+    })
 
     const onOpenChange = openKeys => {
       const latestOpenKey = openKeys.find(key => state.openKeys.indexOf(key) === -1);
@@ -58,11 +58,16 @@ export default defineComponent({
       if (state.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
         state.openKeys = openKeys;
       } else {
-        state.openKeys = latestOpenKey ? [latestOpenKey] : [];
+        state.openKeys = latestOpenKey ? [latestOpenKey] : []
       }
+    }
+    return {
+      ...toRefs(state),
+      onOpenChange,
+      mainMenu: computed(() => {
+        // console.log(store)
+      })
     };
-
-    return { ...toRefs(state), onOpenChange };
   },
   components: {
     AppstoreOutlined,

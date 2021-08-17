@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, watchEffect } from 'vue'
+import { defineComponent, reactive } from 'vue'
 import {
   Header,
   MenuTab,

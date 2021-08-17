@@ -31,7 +31,6 @@ export const asyncRouterMap = [
     ]
   }
 ]
-console.log(asyncRouterMap)
 /**
  * 基础路由
  * @type { *[] }

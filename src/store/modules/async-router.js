@@ -1,6 +1,7 @@
 import { constantRouterMap } from '@/config/router.config'
-import { generatorDynamicRouter } from '@/router/async-router.js'
+import { generatorDynamicRouter } from '@/router/generator-routers.js'
 const permission = {
+  namespace: true,
   state: {
     routers: constantRouterMap,
     addRouters: []
