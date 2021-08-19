@@ -1,18 +1,124 @@
 <template>
-  <div id="userLayout">
-    <router-view />
-  </div>
+	<div id="userLayout" class="user-layout-wrapper">
+		<div class="container">
+			<div class="user-layout-lang"></div>
+			<div class="user-layout-content">
+				<div class="top">
+					<div class="header">
+						<a href="/">
+							<!-- <img src="~@/aseets/logo.svg" class="logo" alt="" /> -->
+							<span class="title">刚需租房</span>
+						</a>
+					</div>
+					<div class="desc">Ant Design 是西湖区最具影响力的 Web 设计规范</div>
+				</div>
+
+				<router-view />
+				<div class="footer">
+					<div class="copyright">Copyright &copy; 2018 佳禾科技</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
-
 export default {
-  name: 'UserLayout',
-  components: {
-  }
+	name: 'UserLayout',
+	components: {},
 }
 </script>
 
 <style lang="less" scoped>
+#userLayout.user-layout-wrapper {
+	height: 100vh;
+	.container {
+		width: 100%;
+		min-height: 100vh;
+		// url(~@/assets/background.svg) no-repeat 50%
+		background: #f0f2f5;
+		background-size: 100%;
+		position: relative;
 
+		.user-layout-lang {
+			width: 100%;
+			height: 40px;
+			line-height: 44px;
+			text-align: right;
+
+			.select-lang-trgger {
+				cursor: pointer;
+				padding: 12px;
+				margin-right: 24px;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 18px;
+				vertical-align: middle;
+			}
+		}
+
+		.user-layout-content {
+			padding: 32px;
+			.top {
+				text-align: center;
+				.header {
+					height: 44px;
+					line-height: 44px;
+				}
+				.logo {
+					height: 44px;
+					vertical-align: top;
+					margin-right: 16px;
+					border-style: none;
+				}
+
+				.title {
+					font-size: 33px;
+					color: rgba(0, 0, 0, 0.85);
+					font-family: Avenir, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+					font-weight: 600;
+					position: relative;
+					top: 2px;
+				}
+			}
+			.desc {
+				font-size: 14px;
+				color: rgba(0, 0, 0, 0.45);
+				margin-top: 12px;
+				margin-bottom: 40px;
+			}
+			.main {
+				min-width: 260px;
+				width: 368px;
+				margin: 0 auto;
+			}
+
+			.footer {
+				// position: absolute;
+				width: 100%;
+				bottom: 0;
+				padding: 0 16px;
+				margin: 48px 0 24px;
+				text-align: center;
+
+				.links {
+					margin-bottom: 8px;
+					font-size: 14px;
+					a {
+						color: rgba(0, 0, 0, 0.45);
+						transition: all 0.3s;
+						&:not(:last-child) {
+							margin-right: 40px;
+						}
+					}
+				}
+				.copyright {
+					color: rgba(0, 0, 0, 0.45);
+					font-size: 14px;
+				}
+			}
+		}
+	}
+}
 </style>

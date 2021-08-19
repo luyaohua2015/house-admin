@@ -13,6 +13,9 @@ export default defineConfig({
       }
     ]
   },
+  server: {
+    hmr: true
+  },
   plugins: [
     vue(),
     ViteComponents({

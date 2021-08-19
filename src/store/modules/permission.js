@@ -44,7 +44,7 @@ function filterAsyncRouter (routerMap, roles) {
   return accessedRouters
 }
 const permission = {
-  namespace: true,
+  namespaced: true,
   state: {
     routers: constantRouterMap,
     addRouters: []

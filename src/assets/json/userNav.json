@@ -66,5 +66,15 @@
     },
     "component": "Permission",
     "path": "/system/permission"
+  },
+  {
+    "name": "404",
+    "parentId": 10024,
+    "id": 10026,
+    "meta": {
+      "title": "404",
+      "show": true
+    },
+    "component": "Exception404"
   }
 ]
