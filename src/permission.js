@@ -15,7 +15,7 @@ router.beforeEach((to, from, next) => {
 		if (to.path === loginRoutePath) {
 			next({ path: defaultRoutePath })
 		} else {
-      console.log(store.getters.roles.length)
+      console.log(to.meta.title)
 			if (store.getters.roles.length === 0) {
 				store.dispatch('user/getUserInfo').then((res) => {
 					// 根据roles权限生成可访问的路由表
@@ -47,6 +47,7 @@ router.beforeEach((to, from, next) => {
 			} else {
         next()
       }
+      store.dispatch('router/set_routes', to)
 		}
 	} else {
 		if (allowList.includes(to.name)) {

@@ -23,7 +23,7 @@
     "path": "/dashboard/workplace"
   },
   {
-    "name": "Analysis",
+    "name": "analysis",
     "parentId": 1,
     "id": 3,
     "meta": {
@@ -46,7 +46,7 @@
     "redirect": "/system/role"
   },
   {
-    "name": "Role",
+    "name": "role",
     "parentId": 4,
     "id": 5,
     "meta": {
@@ -57,7 +57,7 @@
     "path": "/system/role"
   },
   {
-    "name": "Permission",
+    "name": "permission",
     "parentId": 4,
     "id": 6,
     "meta": {

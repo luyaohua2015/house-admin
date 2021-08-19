@@ -82,7 +82,7 @@ export const generator = function (routerMap, parent) {
       component: constantRouterComponents[item.component || item.key] || (() => import(`@/views/${item.component}`)),
       // meta: 页面标题, 菜单图标, 页面权限(供指令权限用，可去掉)
       meta: {
-        title: title,
+        title: title || '网站首页',
         icon: icon || undefined,
         hiddenHeaderContent: hiddenHeaderContent,
         target: target,
