@@ -15,7 +15,6 @@ router.beforeEach((to, from, next) => {
 		if (to.path === loginRoutePath) {
 			next({ path: defaultRoutePath })
 		} else {
-      console.log(to.meta.title)
 			if (store.getters.roles.length === 0) {
 				store.dispatch('user/getUserInfo').then((res) => {
 					// 根据roles权限生成可访问的路由表

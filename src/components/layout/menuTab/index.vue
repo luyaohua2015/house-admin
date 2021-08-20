@@ -1,25 +1,32 @@
 <template>
-  <a-layout-header style="background: #fff; padding: 0" >
-    <a-tabs v-model:activeKey="activeKey" @change="onChange">
-      <a-tab-pane :key="item.fullPath" :tab="item.meta.title || '网站首页'" v-for="item in menus"></a-tab-pane>
-    </a-tabs>
-  </a-layout-header>
+	<a-tabs
+		v-model:activeKey="activeKey"
+		@change="onChange"
+		style="background: #fff"
+		hide-add
+		type="editable-card"
+		@edit="onEdit"
+	>
+		<a-tab-pane :key="item.fullPath" v-for="item in menus" :closable="menus.length > 1">
+      <template #tab>
+        <span>
+          {{ item.meta.title }}
+          <ReloadOutlined style="fontSize: 12px;marginLeft: 5px" @click="reloadPage(item)"/>
+        </span>
+      </template>
+    </a-tab-pane>
+	</a-tabs>
 </template>
 
 <script>
 import { useStore } from 'vuex'
 import { useRouter, onBeforeRouteUpdate } from "vue-router"
-import { computed, defineComponent, reactive, ref, toRefs, watchEffect } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
+import { ReloadOutlined } from '@ant-design/icons-vue'
 export default defineComponent({
   setup() {
     const store = useStore()
     const router = useRouter()
-    // console.log(store.getters.menus, store)
-    // activeKey = store.getters.menus && store.getters.menus[0].fullPath
-    // // const menus = reactive([])
-    // watchEffect(menus, () => {
-    //   activeKey = store.getters.menus && store.getters.menus[0].fullPath
-    // })
     const activeKey = ref(store.getters.menus[0].fullPath)
     onBeforeRouteUpdate((to) => {
       activeKey.value = to.fullPath
@@ -29,11 +36,31 @@ export default defineComponent({
         path: activeKey
       })
     }
+
+    const onEdit = (targetKey) => {
+      const index = store.getters.menus.findIndex(item => item.fullPath === targetKey)
+      if (index >= 0) {
+        activeKey.value = store.getters.menus[index - 1].fullPath
+      }
+      store.dispatch('router/remove_routes', targetKey)
+    }
+
+    const reloadPage = (item) => {
+      router.replace({
+        path: item.fullPath
+      })
+      activeKey.value = item.fullPath
+    }
     return {
       menus: computed(() => store.getters.menus),
       activeKey,
-      onChange
+      onChange,
+      onEdit,
+      reloadPage
     }
+  },
+  components: {
+    ReloadOutlined
   }
 })
 </script>

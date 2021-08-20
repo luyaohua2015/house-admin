@@ -32,7 +32,7 @@
 import { computed, defineComponent, reactive, toRefs } from 'vue'
 import { AppstoreOutlined, SettingOutlined } from '@ant-design/icons-vue'
 import { useStore } from 'vuex'
-import { useRouter, onBeforeRouteUpdate } from 'vue-router'
+import { useRouter, onBeforeRouteUpdate, useRoute } from 'vue-router'
 export default defineComponent({
 	props: {
 		collapsed: {
@@ -57,6 +57,7 @@ export default defineComponent({
 			}
 		}
     const router = useRouter()
+    const route = useRoute()
     const store = useStore()
     onBeforeRouteUpdate((to) => {
       state.selectedKeys = [to.name]
@@ -70,10 +71,9 @@ export default defineComponent({
         const mainMenu = store.getters.addRouters
         const routes = mainMenu.find(item => item.path === '/')
         const menus = (routes && routes.children) || []
-        console.log(menus)
         state.rootSubmenuKeys = menus.map(item => item.name)
-        state.openKeys = [menus[0].name]
-        state.selectedKeys = [menus[0].children[0].name]
+        state.openKeys = [route.fullPath.split('/')[1]]
+        state.selectedKeys = [route.name]
         return menus
 			}),
       handleClick: function({ item, key, keyPath }) {
