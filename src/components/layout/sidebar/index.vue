@@ -9,10 +9,9 @@
 				v-model:selectedKeys="selectedKeys"
 				@openChange="onOpenChange"
 				mode="inline"
-				inlineCollapsed="true"
 				@click="handleClick"
 			>
-				<a-sub-menu @titleClick="titleClick" v-for="item in menus" :key="item.name">
+				<a-sub-menu v-for="item in menus" :key="item.name">
 					<template #icon>
 						<AppstoreOutlined />
 					</template>
