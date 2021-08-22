@@ -46,7 +46,7 @@ router.beforeEach((to, from, next) => {
 			} else {
         next()
       }
-      store.dispatch('router/set_routes', to)
+      store.dispatch('router/setRoutes', to)
 		}
 	} else {
 		if (allowList.includes(to.name)) {

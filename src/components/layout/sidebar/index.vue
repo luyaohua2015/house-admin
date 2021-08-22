@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { computed, defineComponent, reactive, toRefs } from 'vue'
+import { computed, defineComponent, reactive, toRefs, watchEffect } from 'vue'
 import { AppstoreOutlined, SettingOutlined } from '@ant-design/icons-vue'
 import { useStore } from 'vuex'
 import { useRouter, onBeforeRouteUpdate, useRoute } from 'vue-router'

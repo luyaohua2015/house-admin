@@ -9,10 +9,10 @@
 					/></span>
 					<template #overlay>
 						<a-menu>
-							<a-menu-item :key="1" @click="closeTab(1, item)" :disabled="key === 0">关闭其他</a-menu-item>
-              <a-menu-item :key="2" @click="closeTab(2, item)" :disabled="key <= 0">关闭左侧标签</a-menu-item>
-              <a-menu-item :key="3" @click="closeTab(3, item)" :disabled="key >= menus.length - 1">关闭右侧标签</a-menu-item>
-              <a-menu-item :key="4" @click="closeTab(4, item)">刷新当前页</a-menu-item>
+							<a-menu-item :key="1" @click="closeTab(1, item, key)" :disabled="key === 0">关闭其他</a-menu-item>
+              <a-menu-item :key="2" @click="closeTab(2, item, key)" :disabled="key <= 0">关闭左侧标签</a-menu-item>
+              <a-menu-item :key="3" @click="closeTab(3, item, key)" :disabled="key >= menus.length - 1">关闭右侧标签</a-menu-item>
+              <a-menu-item :key="4" @click="closeTab(4, item, key)">刷新当前页</a-menu-item>
 						</a-menu>
 					</template>
 				</a-dropdown>
@@ -23,8 +23,8 @@
 				<MoreOutlined class="more-btn" />
 				<template #overlay>
 					<a-menu>
-						<a-menu-item key="1">关闭其他</a-menu-item>
-						<a-menu-item key="2">刷新当前页</a-menu-item>
+						<a-menu-item key="1"  @click="closeTab(1, {}, 1)">关闭其他</a-menu-item>
+						<a-menu-item key="2"  @click="closeTab(4, {}, 4)">刷新当前页</a-menu-item>
 					</a-menu>
 				</template>
 			</a-dropdown>
@@ -41,29 +41,6 @@ export default defineComponent({
 	setup() {
 		const store = useStore()
 		const router = useRouter()
-		const dropMenus = [
-			{
-				key: 1,
-				title: '关闭其他',
-        fun: () => { }
-			},
-			{
-				key: 2,
-				title: '关闭左侧标签',
-        fun: () => { }
-			},
-			{
-				key: 3,
-				title: '关闭右侧标签',
-        fun: () => { }
-			},
-			{
-				key: 4,
-				title: '刷新当前页',
-        disabled: false,
-        fun: () => { }
-			}
-		]
 		const activeKey = ref(store.getters.menus[0].fullPath)
 		onBeforeRouteUpdate((to) => {
 			activeKey.value = to.fullPath
@@ -79,7 +56,7 @@ export default defineComponent({
 			if (index >= 0) {
 				activeKey.value = store.getters.menus[index - 1].fullPath
 			}
-			store.dispatch('router/remove_routes', activeKey.value)
+			store.dispatch('router/removeRoutes', activeKey.value)
 		}
 
 		const reloadPage = (item) => {
@@ -88,19 +65,33 @@ export default defineComponent({
 			})
 			activeKey.value = item.fullPath
 		}
-    const closeTab = (key, item) => {
-      console.log(key)
+    const closeTab = (key, item, index) => {
       const tabAction = {
         1: () => {
-
+          if (item && !item.fullPath) {
+            item = store.getters.menus.find(subItem => subItem.fullPath === activeKey.value)
+          }
+          store.dispatch('router/otherRoutes', item).then(() => {
+            activeKey.value = store.getters.menus[0].fullPath
+            reloadPage(item)
+          })
         },
         2: () => {
-
+          store.dispatch('router/removeLeftRoutes', index).then(() => {
+            activeKey.value = store.getters.menus[0].fullPath
+            reloadPage(item)
+          })
         },
         3: () => {
-
+          store.dispatch('router/removeRightRoutes', index).then(() => {
+            activeKey.value = store.getters.menus[index].fullPath
+            reloadPage(item)
+          })
         },
         4: () => {
+          if (item && !item.fullPath) {
+            item = store.getters.menus.find(subItem => subItem.fullPath === activeKey.value)
+          }
           reloadPage(item)
         }
       }
@@ -112,7 +103,6 @@ export default defineComponent({
 			onChange,
 			onRemove,
 			reloadPage,
-      dropMenus,
       closeTab
 		}
 	},
