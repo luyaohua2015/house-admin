@@ -39,6 +39,7 @@
 <script>
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue'
 import SelectLanguage from '@/components/selectLanguage/index.vue'
+import { useStore } from 'vuex'
 export default {
 	name: 'Header',
 	props: {
@@ -47,9 +48,8 @@ export default {
 			default: false,
 		},
 	},
-	setup() {},
-	methods: {
-		onClick({ key }) {
+	setup() {
+    const onClick = ({ key }) => {
 			const item = {
 				0: () => {},
 				1: () => {},
@@ -62,8 +62,11 @@ export default {
 				},
 			}
 			item[key]()
-		},
-	},
+		}
+    return {
+      onClick
+    }
+  },
 	components: {
 		MenuFoldOutlined,
 		MenuUnfoldOutlined,

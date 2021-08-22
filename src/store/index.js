@@ -4,6 +4,7 @@ import routers from './modules/router'
 import asyncRouter from './modules/asyncRouter'
 import user from './modules/user'
 import router from './modules/router'
+import app from './modules/app'
 import getters from './getters'
 export const key = 'fang-store'
 export default createStore({
@@ -11,7 +12,8 @@ export default createStore({
     routers,
     asyncRouter,
     user,
-    router
+    router,
+    app
   },
   getters
 })

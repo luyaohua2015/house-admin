@@ -1,10 +1,15 @@
 <template>
-	<a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
-		<div class="logo" style="color: white">刚需买房</div>
+	<a-layout-sider
+		:theme="layout === 'SideLayout' ? 'dark' : 'light'"
+		v-model:collapsed="collapsed"
+		:trigger="null"
+		collapsible
+	>
+		<div class="logo" style="color: white" v-if="!hideLogo">刚需买房</div>
 		<div class="fang-menu">
 			<a-menu
 				id="fangMenu"
-				theme="dark"
+				:theme="layout === 'SideLayout' ? 'dark' : 'light'"
 				:openKeys="openKeys"
 				v-model:selectedKeys="selectedKeys"
 				@openChange="onOpenChange"
@@ -15,12 +20,12 @@
 					<template #icon>
 						<AppstoreOutlined />
 					</template>
-					<template #title>{{item.meta && item.meta.title}}</template>
-          <template v-if="item.children && item.children.length > 0">
-					  <a-menu-item :key="subItem.name" v-for="subItem in item.children">
-              {{subItem.meta && subItem.meta.title}}
-            </a-menu-item>
-          </template>
+					<template #title>{{ item.meta && item.meta.title }}</template>
+					<template v-if="item.children && item.children.length > 0">
+						<a-menu-item :key="subItem.name" v-for="subItem in item.children">
+							{{ subItem.meta && subItem.meta.title }}
+						</a-menu-item>
+					</template>
 				</a-sub-menu>
 			</a-menu>
 		</div>
@@ -32,18 +37,23 @@ import { computed, defineComponent, reactive, toRefs, watchEffect } from 'vue'
 import { AppstoreOutlined, SettingOutlined } from '@ant-design/icons-vue'
 import { useStore } from 'vuex'
 import { useRouter, onBeforeRouteUpdate, useRoute } from 'vue-router'
+
 export default defineComponent({
 	props: {
 		collapsed: {
 			type: Boolean,
-			default: false,
+			default: false
 		},
+		hideLogo: {
+			type: Boolean,
+			default: false
+		}
 	},
 	setup() {
 		const state = reactive({
 			rootSubmenuKeys: [],
 			openKeys: [],
-			selectedKeys: [],
+			selectedKeys: []
 		})
 
 		const onOpenChange = (openKeys) => {
@@ -55,37 +65,38 @@ export default defineComponent({
 				state.openKeys = latestOpenKey ? [latestOpenKey] : []
 			}
 		}
-    const router = useRouter()
-    const route = useRoute()
-    const store = useStore()
-    onBeforeRouteUpdate((to) => {
-      state.selectedKeys = [to.name]
-      state.openKeys = [to.fullPath.split('/')[1]]
-    })
+		const router = useRouter()
+		const route = useRoute()
+		const store = useStore()
+		onBeforeRouteUpdate((to) => {
+			state.selectedKeys = [to.name]
+			state.openKeys = [to.fullPath.split('/')[1]]
+		})
 
 		return {
 			...toRefs(state),
 			onOpenChange,
 			menus: computed(() => {
-        const mainMenu = store.getters.addRouters
-        const routes = mainMenu.find(item => item.path === '/')
-        const menus = (routes && routes.children) || []
-        state.rootSubmenuKeys = menus.map(item => item.name)
-        state.openKeys = [route.fullPath.split('/')[1]]
-        state.selectedKeys = [route.name]
-        return menus
+				const mainMenu = store.getters.addRouters
+				const routes = mainMenu.find((item) => item.path === '/')
+				const menus = (routes && routes.children) || []
+				state.rootSubmenuKeys = menus.map((item) => item.name)
+				state.openKeys = [route.fullPath.split('/')[1]]
+				state.selectedKeys = [route.name]
+				return menus
 			}),
-      handleClick: function({ item, key, keyPath }) {
-        router.push({
-          path: `/${keyPath.join('/')}`
-        })
-      }
+			handleClick: function ({ item, key, keyPath }) {
+				router.push({
+					path: `/${keyPath.join('/')}`
+				})
+			},
+			layout: computed(() => store.getters.layout)
 		}
 	},
 	components: {
 		AppstoreOutlined,
-		SettingOutlined,
-	},
+		SettingOutlined
+	}
 })
 </script>
 
