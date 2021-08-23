@@ -6,30 +6,52 @@
     v-model:visible="visible"
     :after-visible-change="afterVisibleChange"
   >
-  <a-typography-title :level="4">整体风格设置</a-typography-title>
+    <a-typography-title :level="5">整体风格设置</a-typography-title>
 
-  <a-typography-title :level="4">导航模式</a-typography-title>
-  <div class="nav-setting">
-    <div class="nav-setting-item nav-setting-item-side" @click="chooseLayout('SideLayout')">
-      <CheckOutlined class="nav-setting-item-checked" v-if="layout === 'SideLayout'"/>
+    <a-typography-title :level="5">导航模式</a-typography-title>
+    <div class="nav-setting">
+      <div class="nav-setting-item nav-setting-item-side" @click="chooseLayout('SideLayout')">
+        <CheckOutlined class="nav-setting-item-checked" v-if="layout === 'SideLayout'"/>
+      </div>
+      <div class="nav-setting-item nav-setting-item-top" @click="chooseLayout('TopLayout')">
+        <CheckOutlined class="nav-setting-item-checked" v-if="layout === 'TopLayout'"/>
+      </div>
+      <div class="nav-setting-item nav-setting-item-mix" @click="chooseLayout('MixLayout')">
+        <CheckOutlined class="nav-setting-item-checked" v-if="layout === 'MixLayout'"/>
+      </div>
     </div>
-    <div class="nav-setting-item nav-setting-item-top" @click="chooseLayout('TopLayout')">
-      <CheckOutlined class="nav-setting-item-checked" v-if="layout === 'TopLayout'"/>
-    </div>
-    <div class="nav-setting-item nav-setting-item-mix" @click="chooseLayout('MixLayout')">
-      <CheckOutlined class="nav-setting-item-checked" v-if="layout === 'MixLayout'"/>
-    </div>
-  </div>
-  <div class="setting-drawer-handle" @click="showDrawer">
-    <SettingOutlined />
-  </div>
+    <h3 :style="{ margin: '16px 0' }">其他设置</h3>
+    <a-typography-title :level="5">其他设置</a-typography-title>
+    <a-list item-layout="horizontal" :data-source="otherSettingOption" :bordered="false">
+      <template #renderItem="{ item }">
+        <a-list-item>
+          {{ item.title }}
+          <template #actions>
+            <a-select
+              v-if="item.key === 'routerAnimation'"
+              ref="select"
+              v-model:value="otherSetting[item.value]"
+            >
+              <a-select-option v-for="subItem in item.options" :key="subItem.value" :value="subItem.value">
+                {{subItem.value}}
+              </a-select-option>
+            </a-select>
+            <a-switch v-else v-model:checked="otherSetting[item.key]" @change="onChange(item)"/>
+          </template>
+        </a-list-item>
+      </template>
+    </a-list>
   </a-drawer>
+  <div class="setting-drawer-handle" :class="{active: visible}" @click="showDrawer">
+    <SettingOutlined v-if="!visible"/>
+    <CloseOutlined v-else/>
+  </div>
 </template>
 
 <script>
 import { useStore } from 'vuex'
-import { defineComponent, ref, computed } from 'vue'
-import { SettingOutlined, CheckOutlined } from  '@ant-design/icons-vue'
+import { defineComponent, ref, computed, reactive } from 'vue'
+import { SettingOutlined, CheckOutlined, CloseOutlined } from  '@ant-design/icons-vue'
 export default defineComponent({
 	setup() {
     const visible = ref(true)
@@ -46,17 +68,78 @@ export default defineComponent({
     const chooseLayout = (item) => {
       store.dispatch('app/setLayout', item)
     }
+
+    const otherSetting = reactive({
+      routerAnimation: 'Slide-Right',
+      menuTab: false,
+      fixedMenuTab: false
+    })
+
+    const otherSettingOption = [
+      {
+        title: '路由动画',
+        key: 'routerAnimation',
+        tip: '',
+        options: [
+          {
+            key: 'Null',
+            value: 'Null'
+          },
+          {
+            key: 'Slide Right',
+            value: 'Slide-Right'
+          },
+          {
+            key: 'Fade In',
+            value: 'Fade-In'
+          },
+          {
+            key: 'Zoom',
+            value: 'Zoom'
+          }
+        ]
+      },
+      {
+        title: '多标签',
+        key: 'menuTab',
+        tip: ''
+      },
+      {
+        title: '固定多标签',
+        key: 'fixedMenuTab',
+        tip: '固定多标签需要先开启多标签并且固定 Header'
+      }
+    ]
+
+    const onChange = (item) => {
+      const actions = {
+        'menuTab': () => {
+          debugger
+          console.log(otherSetting[item.value])
+          store.dispatch('app/setMenuTab', otherSetting[item.value])
+        },
+        'fixedMenuTab': () => {
+          
+        }
+      }
+      actions[item.key]()
+    }
+
 		return {
       layout: computed(() => store.getters.layout),
       visible,
       afterVisibleChange,
       showDrawer,
-      chooseLayout
+      chooseLayout,
+      onChange,
+      otherSetting,
+      otherSettingOption
 		}
 	},
 	components: {
     SettingOutlined,
-    CheckOutlined
+    CheckOutlined,
+    CloseOutlined
 	}
 })
 </script>
@@ -120,8 +203,8 @@ export default defineComponent({
 .setting-drawer-handle {
   position: fixed;
   top: 240px;
-  right: 256px;
-  z-index: 99;
+  right: 0;
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -134,5 +217,11 @@ export default defineComponent({
   cursor: pointer;
   pointer-events: auto;
   color: #fff;
+  > span {
+    transform: 0.3s cubic-bezier(0.7, 0.3, 0.1, 1);
+  }
+  &.active {
+    right: 256px;
+  }
 }
 </style>

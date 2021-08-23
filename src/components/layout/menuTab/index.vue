@@ -1,5 +1,11 @@
 <template>
-	<a-tabs v-model:activeKey="activeKey" @change="onChange" style="background: #fff; padding-left: 16px" type="card">
+	<a-tabs
+		v-if="showMenuTab"
+		v-model:activeKey="activeKey"
+		@change="onChange"
+		style="background: #fff; padding-left: 16px"
+		type="card"
+	>
 		<a-tab-pane :key="item.fullPath" v-for="(item, key) in menus" :closable="true">
 			<template #tab>
 				<a-dropdown :trigger="['contextmenu']">
@@ -10,9 +16,11 @@
 					<template #overlay>
 						<a-menu>
 							<a-menu-item :key="1" @click="closeTab(1, item, key)" :disabled="key === 0">关闭其他</a-menu-item>
-              <a-menu-item :key="2" @click="closeTab(2, item, key)" :disabled="key <= 0">关闭左侧标签</a-menu-item>
-              <a-menu-item :key="3" @click="closeTab(3, item, key)" :disabled="key >= menus.length - 1">关闭右侧标签</a-menu-item>
-              <a-menu-item :key="4" @click="closeTab(4, item, key)">刷新当前页</a-menu-item>
+							<a-menu-item :key="2" @click="closeTab(2, item, key)" :disabled="key <= 0">关闭左侧标签</a-menu-item>
+							<a-menu-item :key="3" @click="closeTab(3, item, key)" :disabled="key >= menus.length - 1"
+								>关闭右侧标签</a-menu-item
+							>
+							<a-menu-item :key="4" @click="closeTab(4, item, key)">刷新当前页</a-menu-item>
 						</a-menu>
 					</template>
 				</a-dropdown>
@@ -23,8 +31,8 @@
 				<MoreOutlined class="more-btn" />
 				<template #overlay>
 					<a-menu>
-						<a-menu-item key="1"  @click="closeTab(1, {}, 1)">关闭其他</a-menu-item>
-						<a-menu-item key="2"  @click="closeTab(4, {}, 4)">刷新当前页</a-menu-item>
+						<a-menu-item key="1" @click="closeTab(1, {}, 1)">关闭其他</a-menu-item>
+						<a-menu-item key="2" @click="closeTab(4, {}, 4)">刷新当前页</a-menu-item>
 					</a-menu>
 				</template>
 			</a-dropdown>
@@ -65,45 +73,46 @@ export default defineComponent({
 			})
 			activeKey.value = item.fullPath
 		}
-    const closeTab = (key, item, index) => {
-      const tabAction = {
-        1: () => {
-          if (item && !item.fullPath) {
-            item = store.getters.menus.find(subItem => subItem.fullPath === activeKey.value)
-          }
-          store.dispatch('router/otherRoutes', item).then(() => {
-            activeKey.value = store.getters.menus[0].fullPath
-            reloadPage(item)
-          })
-        },
-        2: () => {
-          store.dispatch('router/removeLeftRoutes', index).then(() => {
-            activeKey.value = store.getters.menus[0].fullPath
-            reloadPage(item)
-          })
-        },
-        3: () => {
-          store.dispatch('router/removeRightRoutes', index).then(() => {
-            activeKey.value = store.getters.menus[index].fullPath
-            reloadPage(item)
-          })
-        },
-        4: () => {
-          if (item && !item.fullPath) {
-            item = store.getters.menus.find(subItem => subItem.fullPath === activeKey.value)
-          }
-          reloadPage(item)
-        }
-      }
-      tabAction[key]()
-    }
+		const closeTab = (key, item, index) => {
+			const tabAction = {
+				1: () => {
+					if (item && !item.fullPath) {
+						item = store.getters.menus.find((subItem) => subItem.fullPath === activeKey.value)
+					}
+					store.dispatch('router/otherRoutes', item).then(() => {
+						activeKey.value = store.getters.menus[0].fullPath
+						reloadPage(item)
+					})
+				},
+				2: () => {
+					store.dispatch('router/removeLeftRoutes', index).then(() => {
+						activeKey.value = store.getters.menus[0].fullPath
+						reloadPage(item)
+					})
+				},
+				3: () => {
+					store.dispatch('router/removeRightRoutes', index).then(() => {
+						activeKey.value = store.getters.menus[index].fullPath
+						reloadPage(item)
+					})
+				},
+				4: () => {
+					if (item && !item.fullPath) {
+						item = store.getters.menus.find((subItem) => subItem.fullPath === activeKey.value)
+					}
+					reloadPage(item)
+				}
+			}
+			tabAction[key]()
+		}
 		return {
 			menus: computed(() => store.getters.menus),
 			activeKey,
 			onChange,
 			onRemove,
 			reloadPage,
-      closeTab
+			closeTab,
+			showMenuTab: computed(() => store.getters.showMenuTab)
 		}
 	},
 	components: {
