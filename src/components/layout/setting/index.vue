@@ -114,12 +114,9 @@ export default defineComponent({
     const onChange = (item) => {
       const actions = {
         'menuTab': () => {
-          debugger
-          console.log(otherSetting[item.value])
-          store.dispatch('app/setMenuTab', otherSetting[item.value])
+          store.dispatch('app/setMenuTab', otherSetting[item.key])
         },
         'fixedMenuTab': () => {
-          
         }
       }
       actions[item.key]()
