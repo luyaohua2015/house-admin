@@ -7,7 +7,9 @@
 			<Header v-model:collapsed="collapsed"  :class="{'fixed-header': fixedHeader || fixedMenuTab, 'fixed-collapsed-header': collapsed}"/>
 			<MenuTab :class="{'fixed-menu-tab': fixedMenuTab, 'fixed-collapsed-tab': collapsed}"/>
 			<a-layout-content class="fang-content">
-				<router-view />
+				<transition name="slide-in-right" :duration="500">
+					<router-view />
+				</transition>
 			</a-layout-content>
 			<a-layout-footer style="text-align: center">{{collapsed}}Ant Design ©2018 Created by Ant UED </a-layout-footer>
 		</a-layout>
