@@ -1,6 +1,6 @@
 <template>
 	<a-layout class="fang-mix-layout">
-    <a-layout-header class="top-layout-header">
+    <a-layout-header class="top-layout-header" :class="{'fixed-header': fixedHeader || fixedMenuTab, 'fixed-collapsed-header': collapsed}">
       <div class="logo">LOGO</div>
       <div class="fang-header-right">
       <span class="fange-account">
@@ -32,10 +32,12 @@
       </span>
     </div>
     </a-layout-header>
-		<a-layout class="fang-mix-layout-box">
+    <a-layout-header style="height: 48px;" v-if="fixedHeader"></a-layout-header>
+		<a-layout class="fang-mix-layout-box" :style="{ marginLeft: marginLeft }">
       <Sidebar v-model:collapsed="collapsed" class="fang-mix-layout-side"  :hideLogo="true"/>
       <a-layout class="fang-mix-layout-content">
-        <MenuTab style="padding-top: 6px;"/>
+        <MenuTab v-if="fixedMenuTab"></MenuTab>
+        <MenuTab :class="{'fixed-menu-tab': fixedMenuTab, 'fixed-collapsed-tab': collapsed}"/>
         <a-layout-content class="fang-content">
           <router-view />
         </a-layout-content>
@@ -46,12 +48,14 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
 import { MenuTab, Sidebar } from '@/components/layout/index.js'
 import SelectLanguage from '@/components/selectLanguage/index.vue'
+import { useStore } from 'vuex'
 export default defineComponent({
 	setup() {
 		const collapsed = ref(false)
+    const store = useStore()
     const onClick = ({ key }) => {
 			const item = {
 				0: () => {},
@@ -68,6 +72,27 @@ export default defineComponent({
 		}
 		return {
 			collapsed,
+			fixedMenuTab: computed(() => store.getters.fixedMenuTab),
+			fixedHeader: computed(() => store.getters.fixedHeader),
+			showMenuTab: computed(() => store.getters.showMenuTab),
+			fixedSidebar: computed(() => store.getters.fixedSidebar),
+			marginLeft: computed({
+				get: function() {
+					if (collapsed.value) {
+						if (store.getters.fixedSidebar) {
+							return '80px'
+						} else {
+							return 0
+						}
+					} else {
+						if (store.getters.fixedSidebar) {
+							return '200px'
+						} else {
+							return 0
+						}
+					}
+				}
+			}),
       onClick
 		}
 	},
@@ -80,6 +105,32 @@ export default defineComponent({
 </script>
 
 <style lang="less">
+.fang-mix-layout {
+  .fixed-header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    display: flex;
+    justify-content: space-between;
+    z-index: 9;
+  }
+  .fixed-menu-tab {
+    position: fixed;
+    top: 48px;
+    right: 0;
+    z-index: 9;
+    width: 100%;
+    height: 62px;
+    transition: width .2s;
+    width: calc(100% - 200px);
+    &.fixed-collapsed-tab {
+      width: calc(100% - 80px);
+    }
+  }
+  .fang-content {
+    margin: 24px;
+  }
+}
 .fang-mix-layout-content {
   overflow: auto;
 }

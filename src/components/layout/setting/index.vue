@@ -54,7 +54,7 @@ import { defineComponent, ref, computed, reactive } from 'vue'
 import { SettingOutlined, CheckOutlined, CloseOutlined } from  '@ant-design/icons-vue'
 export default defineComponent({
 	setup() {
-    const visible = ref(true)
+    const visible = ref(false)
 
     const afterVisibleChange = bool => {
       console.log('visible', bool)
@@ -71,8 +71,9 @@ export default defineComponent({
 
     const otherSetting = reactive({
       routerAnimation: 'Slide-Right',
-      menuTab: false,
-      fixedMenuTab: false
+      menuTab: store.getters.showMenuTab,
+      fixedMenuTab: store.getters.fixedMenuTab,
+      fixedHeader: store.getters.fixedHeader
     })
 
     const otherSettingOption = [
@@ -100,6 +101,16 @@ export default defineComponent({
         ]
       },
       {
+        title: '固定 Header',
+        key: 'fixedHeader',
+        tip: ''
+      },
+      {
+        title: '固定侧边菜单',
+        key: 'fixedSidebar',
+        tip: ''
+      },
+      {
         title: '多标签',
         key: 'menuTab',
         tip: ''
@@ -112,14 +123,11 @@ export default defineComponent({
     ]
 
     const onChange = (item) => {
-      const actions = {
-        'menuTab': () => {
-          store.dispatch('app/setMenuTab', otherSetting[item.key])
-        },
-        'fixedMenuTab': () => {
-        }
+      const action = `app/set${item.key.charAt(0).toUpperCase()}${item.key.slice(1)}`
+      if (item.key === 'fixedHeader') {
+        store.dispatch('app/setFixedMenuTab', otherSetting.fixedHeader)
       }
-      actions[item.key]()
+      store.dispatch(action, otherSetting[item.key])
     }
 
 		return {

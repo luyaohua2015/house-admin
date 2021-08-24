@@ -3,7 +3,7 @@
 		v-if="showMenuTab"
 		v-model:activeKey="activeKey"
 		@change="onChange"
-		style="background: #fff; padding-left: 16px"
+		style="background: #fff; padding-left: 16px; padding-top: 6px;"
 		type="card"
 	>
 		<a-tab-pane :key="item.fullPath" v-for="(item, key) in menus" :closable="true">

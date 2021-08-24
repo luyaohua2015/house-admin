@@ -4,7 +4,10 @@ const getters = {
   roles: state => state.user.roles,
   menus:  state => state.router.routes,
   layout: state => state.app.layout,
-  showMenuTab: state => state.app.showMenuTab
+  showMenuTab: state => state.app.showMenuTab,
+  fixedMenuTab: state => state.app.fixedMenuTab,
+  fixedHeader: state => state.app.fixedHeader,
+  fixedSidebar: state => state.app.fixedSidebar,
 }
 
 export default getters

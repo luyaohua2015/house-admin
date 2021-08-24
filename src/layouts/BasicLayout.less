@@ -1,5 +1,35 @@
 .fang-container {
   min-height: 100vh;
+  .ant-tabs-bar {
+    margin: 0;
+  }
+  .fixed-header {
+    position: fixed;
+    top: 0;
+    transition: width .2s;
+    padding: 0px;
+    height: 48px;
+    line-height: 48px;
+    width: calc(100% - 200px);
+    z-index: 9;
+    right: 0px;
+    &.fixed-collapsed-header {
+      width: calc(100% - 80px);
+    }
+  }
+  .fixed-menu-tab {
+    position: fixed;
+    top: 48px;
+    right: 0;
+    z-index: 9;
+    width: 100%;
+    height: 62px;
+    transition: width .2s;
+    width: calc(100% - 200px);
+    &.fixed-collapsed-tab {
+      width: calc(100% - 80px);
+    }
+  }
   .fang-content {
     margin: 24px;
   }

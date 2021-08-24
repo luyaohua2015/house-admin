@@ -1,11 +1,14 @@
 <template>
 	<a-layout-sider
 		:theme="layout === 'SideLayout' ? 'dark' : 'light'"
-		v-model:collapsed="collapsed"
-		:trigger="null"
+		v-model:collapsed="triggercollapsed"
 		collapsible
+		class="fang-side-bar"
+		:class="{'fixed-side-bar': fixedSidebar}"
 	>
-		<div class="logo" style="color: white" v-if="!hideLogo">刚需买房</div>
+		<div class="logo" v-if="!hideLogo">
+			<a-typography-title  style="color: white" :level="4">Introduction={{triggercollapsed}}</a-typography-title>
+		</div>
 		<div class="fang-menu">
 			<a-menu
 				id="fangMenu"
@@ -33,7 +36,7 @@
 </template>
 
 <script>
-import { computed, defineComponent, reactive, toRefs, watchEffect } from 'vue'
+import { computed, defineComponent, reactive, toRefs, watch, ref } from 'vue'
 import { AppstoreOutlined, SettingOutlined } from '@ant-design/icons-vue'
 import { useStore } from 'vuex'
 import { useRouter, onBeforeRouteUpdate, useRoute } from 'vue-router'
@@ -49,13 +52,13 @@ export default defineComponent({
 			default: false
 		}
 	},
-	setup() {
+	setup(props, context) {
 		const state = reactive({
 			rootSubmenuKeys: [],
 			openKeys: [],
 			selectedKeys: []
 		})
-
+		var triggercollapsed = ref(props.collapsed)
 		const onOpenChange = (openKeys) => {
 			const latestOpenKey = openKeys.find((key) => state.openKeys.indexOf(key) === -1)
 
@@ -71,6 +74,18 @@ export default defineComponent({
 		onBeforeRouteUpdate((to) => {
 			state.selectedKeys = [to.name]
 			state.openKeys = [to.fullPath.split('/')[1]]
+		})
+		watch(props, (newVal) => {
+			triggercollapsed.value = newVal && newVal.collapsed
+			console.log(triggercollapsed.value)
+		}, {
+			deep: true
+		})
+
+		watch(triggercollapsed, (newVal) => {
+			context.emit('update:collapsed', newVal)
+		}, {
+			deep: true
 		})
 
 		return {
@@ -90,7 +105,9 @@ export default defineComponent({
 					path: `/${keyPath.join('/')}`
 				})
 			},
-			layout: computed(() => store.getters.layout)
+			layout: computed(() => store.getters.layout),
+			fixedSidebar: computed(() => store.getters.fixedSidebar),
+			triggercollapsed
 		}
 	},
 	components: {
@@ -100,8 +117,13 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-.logo {
-	padding: 12px;
+<style lang="less" scoped>
+.fang-side-bar {
+	overflow: auto;
+	&.fixed-side-bar {
+	  height: 100vh;
+		position: fixed;
+		left: 0;
+	}
 }
 </style>
