@@ -7,7 +7,7 @@
 		:class="{'fixed-side-bar': fixedSidebar}"
 	>
 		<div class="logo" v-if="!hideLogo">
-			<a-typography-title  style="color: white" :level="4">Introduction={{triggercollapsed}}</a-typography-title>
+			<a-typography-title  style="color: white" :level="4">刚需买房</a-typography-title>
 		</div>
 		<div class="fang-menu">
 			<a-menu

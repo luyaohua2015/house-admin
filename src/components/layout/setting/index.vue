@@ -30,7 +30,8 @@
             <a-select
               v-if="item.key === 'routerAnimation'"
               ref="select"
-              v-model:value="otherSetting[item.value]"
+              v-model:value="otherSetting.routerAnimation"
+              @change="onSelectChange"
             >
               <a-select-option v-for="subItem in item.options" :key="subItem.value" :value="subItem.value">
                 {{subItem.value}}
@@ -70,7 +71,7 @@ export default defineComponent({
     }
 
     const otherSetting = reactive({
-      routerAnimation: 'Slide-Right',
+      routerAnimation: store.getters.animation,
       menuTab: store.getters.showMenuTab,
       fixedMenuTab: store.getters.fixedMenuTab,
       fixedHeader: store.getters.fixedHeader
@@ -88,15 +89,19 @@ export default defineComponent({
           },
           {
             key: 'Slide Right',
-            value: 'Slide-Right'
+            value: 'slide-in-right'
+          },
+          {
+            key: 'Slide Up',
+            value: 'slide-in-up'
           },
           {
             key: 'Fade In',
-            value: 'Fade-In'
+            value: 'fade-in'
           },
           {
-            key: 'Zoom',
-            value: 'Zoom'
+            key: 'Zoom In',
+            value: 'zoom-in'
           }
         ]
       },
@@ -130,6 +135,10 @@ export default defineComponent({
       store.dispatch(action, otherSetting[item.key])
     }
 
+    const onSelectChange = () => {
+      store.dispatch('app/setAnimation', otherSetting.routerAnimation)
+    }
+
 		return {
       layout: computed(() => store.getters.layout),
       visible,
@@ -138,7 +147,8 @@ export default defineComponent({
       chooseLayout,
       onChange,
       otherSetting,
-      otherSettingOption
+      otherSettingOption,
+      onSelectChange
 		}
 	},
 	components: {

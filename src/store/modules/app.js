@@ -7,7 +7,8 @@ const app = {
 		showMenuTab: true,
 		fixedMenuTab: true,
 		fixedHeader: true,
-		fixedSidebar: false
+		fixedSidebar: true,
+    animation: ''
 	},
 	mutations: {
 		SET_LAYOUT(state, layout) {
@@ -24,6 +25,9 @@ const app = {
 		},
 		SET_FIXED_SIDEBAR(state, fixedSidebar) {
 			state.fixedSidebar = fixedSidebar
+		},
+		SET_ANIMATION(state, animation) {
+			state.animation = animation
 		}
   },
 	actions: {
@@ -41,6 +45,9 @@ const app = {
 		},
 		setFixedSidebar({ commit }, data) {
 			commit('SET_FIXED_SIDEBAR', data)
+		},
+		setAnimation({ commit }, data) {
+			commit('SET_ANIMATION', data)
 		}
 	},
 }

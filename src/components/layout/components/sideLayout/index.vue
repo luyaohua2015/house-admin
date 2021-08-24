@@ -7,7 +7,7 @@
 			<Header v-model:collapsed="collapsed"  :class="{'fixed-header': fixedHeader || fixedMenuTab, 'fixed-collapsed-header': collapsed}"/>
 			<MenuTab :class="{'fixed-menu-tab': fixedMenuTab, 'fixed-collapsed-tab': collapsed}"/>
 			<a-layout-content class="fang-content">
-				<transition name="slide-in-right" :duration="500">
+				<transition :name="animation" :duration="500">
 					<router-view />
 				</transition>
 			</a-layout-content>
@@ -26,6 +26,7 @@ export default defineComponent({
 		const store = useStore()
 		return {
 			collapsed,
+      animation: computed(() => store.getters.animation),
 			fixedMenuTab: computed(() => store.getters.fixedMenuTab),
 			fixedHeader: computed(() => store.getters.fixedHeader),
 			showMenuTab: computed(() => store.getters.showMenuTab),
