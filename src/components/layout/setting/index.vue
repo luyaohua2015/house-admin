@@ -68,10 +68,10 @@
       </template>
     </a-list>
   </a-drawer>
-  <div class="setting-drawer-handle" :class="{active: visible}" @click="showDrawer">
+  <a-button type="primary" class="setting-drawer-handle" :class="{active: visible}" @click="showDrawer">
     <SettingOutlined v-if="!visible"/>
     <CloseOutlined v-else/>
-  </div>
+  </a-button>
 </template>
 
 <script>
@@ -340,7 +340,6 @@ export default defineComponent({
   height: 48px;
   font-size: 16px;
   text-align: center;
-  background: #1890ff;
   border-radius: 4px 0 0 4px;
   cursor: pointer;
   pointer-events: auto;
