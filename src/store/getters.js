@@ -8,7 +8,9 @@ const getters = {
   fixedMenuTab: state => state.app.fixedMenuTab,
   fixedHeader: state => state.app.fixedHeader,
   fixedSidebar: state => state.app.fixedSidebar,
-  animation: state => state.app.animation
+  animation: state => state.app.animation,
+  primaryColor: state => state.app.primaryColor,
+  style: state => state.app.style
 }
 
 export default getters

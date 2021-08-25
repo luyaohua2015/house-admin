@@ -8,7 +8,9 @@ const app = {
 		fixedMenuTab: true,
 		fixedHeader: true,
 		fixedSidebar: true,
-    animation: ''
+    animation: '',
+		primaryColor: '#1890FF',
+		style: 'dark'
 	},
 	mutations: {
 		SET_LAYOUT(state, layout) {
@@ -28,6 +30,12 @@ const app = {
 		},
 		SET_ANIMATION(state, animation) {
 			state.animation = animation
+		},
+		SET_PRIMARY_COLOR(state, color) {
+			state.primaryColor = color
+		},
+		SET_STYLE(state, style) {
+			state.style = style
 		}
   },
 	actions: {
@@ -48,6 +56,12 @@ const app = {
 		},
 		setAnimation({ commit }, data) {
 			commit('SET_ANIMATION', data)
+		},
+		setPrimaryColor({ commit }, data) {
+			commit('SET_PRIMARY_COLOR', data)
+		},
+		setStyle({ commit }, data) {
+			commit('SET_STYLE', data)
 		}
 	},
 }

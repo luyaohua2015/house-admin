@@ -13,4 +13,10 @@
   color: #2c3e50;
   height: 100vh;
 }
+.ant-layout {
+  background-color: #f0f2f5 !important;
+}
+.ant-layout-footer {
+  background: #f0f2f5 !important;
+}
 </style>

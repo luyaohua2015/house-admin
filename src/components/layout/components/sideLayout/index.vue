@@ -3,7 +3,7 @@
 		<Sidebar v-model:collapsed="collapsed" />
 		<a-layout :style="{ marginLeft: marginLeft }">
 			<Header v-if="fixedHeader"></Header>
-			<a-tabs v-if="fixedMenuTab" :tabBarStyle="{margin: 0, padding: 0, borderBottom: 0}"></a-tabs>
+			<MenuTab v-if="fixedMenuTab"/>
 			<Header v-model:collapsed="collapsed"  :class="{'fixed-header': fixedHeader || fixedMenuTab, 'fixed-collapsed-header': collapsed}"/>
 			<MenuTab :class="{'fixed-menu-tab': fixedMenuTab, 'fixed-collapsed-tab': collapsed}"/>
 			<a-layout-content class="fang-content">

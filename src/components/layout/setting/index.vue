@@ -7,7 +7,17 @@
     :after-visible-change="afterVisibleChange"
   >
     <a-typography-title :level="5">整体风格设置</a-typography-title>
-
+    <div class="style-setting">
+      <div class="style-setting-item style-setting-item-light" @click="chooseStyle('light')">
+        <CheckOutlined class="style-setting-item-checked" v-if="layout === 'light'"/>
+      </div>
+      <div class="style-setting-item style-setting-item-mix" @click="chooseStyle('mix')">
+        <CheckOutlined class="style-setting-item-checked" v-if="layout === 'dark'"/>
+      </div>
+      <div class="style-setting-item style-setting-item-dark" @click="chooseStyle('dark')">
+        <CheckOutlined class="style-setting-item-checked" v-if="layout === 'dark'"/>
+      </div>
+    </div>
     <a-typography-title :level="5">导航模式</a-typography-title>
     <div class="nav-setting">
       <div class="nav-setting-item nav-setting-item-side" @click="chooseLayout('SideLayout')">
@@ -20,7 +30,21 @@
         <CheckOutlined class="nav-setting-item-checked" v-if="layout === 'MixLayout'"/>
       </div>
     </div>
-    <h3 :style="{ margin: '16px 0' }">其他设置</h3>
+    <div :style="{ marginBottom: '24px', marginTop: '24px' }">
+      <a-typography-title :level="5">主题色</a-typography-title>
+      <div class="theme-tag">
+        <a-tooltip class="setting-drawer-theme-color-colorBlock" v-for="(item, index) in colorList" :key="index">
+          <template v-slot:title>
+            {{ item.key }}
+          </template>
+          <a-tag :color="item.color" @click="changeColor(item.color)">
+            <template #icon>
+              <CheckOutlined v-if="item.color === primaryColor"/>
+            </template>
+          </a-tag>
+        </a-tooltip>
+      </div>
+    </div>
     <a-typography-title :level="5">其他设置</a-typography-title>
     <a-list item-layout="horizontal" :data-source="otherSettingOption" :bordered="false">
       <template #renderItem="{ item }">
@@ -28,6 +52,7 @@
           {{ item.title }}
           <template #actions>
             <a-select
+              style="width: 70px"
               v-if="item.key === 'routerAnimation'"
               ref="select"
               v-model:value="otherSetting.routerAnimation"
@@ -52,7 +77,11 @@
 <script>
 import { useStore } from 'vuex'
 import { defineComponent, ref, computed, reactive } from 'vue'
-import { SettingOutlined, CheckOutlined, CloseOutlined } from  '@ant-design/icons-vue'
+import { SettingOutlined, CheckOutlined, CloseOutlined, CheckSquareFilled } from  '@ant-design/icons-vue'
+import { colorList, updateTheme } from './settingConfig'
+import darkVars from '@/config/dark.json';
+import lightVars from '@/config/light.json';
+import compactVars from '@/config/compact.json';
 export default defineComponent({
 	setup() {
     const visible = ref(false)
@@ -85,7 +114,7 @@ export default defineComponent({
         options: [
           {
             key: 'Null',
-            value: 'Null'
+            value: ''
           },
           {
             key: 'Slide Right',
@@ -139,22 +168,46 @@ export default defineComponent({
       store.dispatch('app/setAnimation', otherSetting.routerAnimation)
     }
 
+    // 改变主题色
+    const changeColor = (color) => {
+      updateTheme({'@primary-color': color}).then(() => {
+        store.dispatch('app/setPrimaryColor', color)
+      })
+    }
+
+    const chooseStyle = (style) => {
+      const styleObj = {
+        dark: darkVars,
+        light: lightVars,
+        mix: compactVars
+      }
+      updateTheme(styleObj[style]).then(() => {
+        store.dispatch('app/setStyle', style)
+      })
+    }
+
 		return {
       layout: computed(() => store.getters.layout),
       visible,
+      otherSetting,
+      otherSettingOption,
+      colorList,
+      primaryColor: computed(() => store.getters.primaryColor),
+      style: computed(() => store.getters.style),
       afterVisibleChange,
       showDrawer,
       chooseLayout,
+      chooseStyle,
       onChange,
-      otherSetting,
-      otherSettingOption,
-      onSelectChange
+      onSelectChange,
+      changeColor
 		}
 	},
 	components: {
     SettingOutlined,
     CheckOutlined,
-    CloseOutlined
+    CloseOutlined,
+    CheckSquareFilled
 	}
 })
 </script>
@@ -215,6 +268,66 @@ export default defineComponent({
     }
   }
 }
+
+.style-setting {
+  display: flex;
+  margin-bottom: 24px;
+  &-item {
+    position: relative;
+    width: 44px;
+    height: 36px;
+    margin-right: 16px;
+    overflow: hidden;
+    background-color: #f0f2f5;
+    border-radius: 4px;
+    box-shadow: 0 1px 2.5px 0 rgb(0 0 0 / 18%);
+    cursor: pointer;
+    &-checked {
+      position: absolute;
+      right: 6px;
+      bottom: 4px;
+      color: #1890ff;
+      font-weight: 700;
+      font-size: 14px;
+      pointer-events: none;
+    }
+    &::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 33%;
+      height: 100%;
+      background-color: #fff;
+      content: "";
+    }
+    &::after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 25%;
+      background-color: #fff;
+      content: "";
+    }
+    &-light::before {
+      z-index: 1;
+      background-color: #fff;
+      content: "";
+    }
+    &-mix::before {
+      background-color: #001529;
+    }
+    &-mix::after {
+      background-color: transparent;
+    }
+    &-dark::after, &-dark::before {
+      background-color: transparent;
+    }
+    &-dark {
+       background-color: #001529;
+    }
+  }
+}
 .setting-drawer-handle {
   position: fixed;
   top: 240px;
@@ -237,6 +350,19 @@ export default defineComponent({
   }
   &.active {
     right: 256px;
+  }
+}
+.theme-tag {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  > span {
+    margin-bottom: 5px;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    text-align: center;
   }
 }
 </style>
