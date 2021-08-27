@@ -1,18 +1,10 @@
+import path from 'path';
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import ViteComponents, { AntDesignVueResolver } from 'vite-plugin-components'
 import viteAntdTheme from 'vite-plugin-antd-theme'
-import path from 'path'
-import { resolve } from 'path'
-const pathResolve = dir => resolve(__dirname, '.', dir)
+import ViteComponents, { AntDesignVueResolver } from 'vite-plugin-components'
 
 const themesEntry = [
-  // 默认主题
-  {
-    entryPath: path.resolve(__dirname, './src/styles/theme/default.less'),
-    outputName: 'light',
-    outputPath: './src/config'
-  },
   // 暗黑主题
   {
     entryPath: [
@@ -22,12 +14,12 @@ const themesEntry = [
     outputName: 'dark',
     outputPath: './src/config'
   },
-  // 紧凑主题
+  // 默认主题
   {
-    entryPath: path.resolve(__dirname, './node_modules/ant-design-vue/lib/style/themes/compact.less'),
-    outputName: 'compact',
+    entryPath: path.resolve(__dirname, './src/styles/theme/default.less'),
+    outputName: 'light',
     outputPath: './src/config'
-  },
+  }
 ];
 
 const options = {
@@ -38,37 +30,35 @@ const options = {
   antDir: path.join(__dirname, './node_modules/ant-design-vue'),
   stylesDir: path.join(__dirname, './src'), // all files with .less extension will be processed
   varFile: path.join(__dirname, './src/styles/theme/default.less'), // default path is Ant Design default.less file
-  themeVariables: [
-    '@primary-color'
-  ],
+  themeVariables: [],
   outputFilePath: path.join(__dirname, './public/static/color.less'), // if provided, file will be created with generated less/styles
   customColorRegexArray: [/^fade\(.*\)$/] // An array of regex codes to match your custom color variable values so that code can identify that it's a valid color. Make sure your regex does not adds false positives.
 };
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  resolve: {
-    alias: [
-      {
-        find: '@', replacement: pathResolve('src')
+    resolve: {
+      alias: {
+        // 键必须以斜线开始和结束
+        '@': path.resolve(__dirname, './src')
       }
-    ]
-  },
-  css: {
-    preprocessorOptions: {
-      less: {
-        javascriptEnabled: true
+    },
+    plugins: [
+      vue(),
+      ViteComponents({
+        customComponentResolvers: [ AntDesignVueResolver() ]
+      }),
+      viteAntdTheme(options)
+    ],
+    css: {
+      modules: {
+        localsConvention: 'camelCase' // 默认只支持驼峰，修改为同事支持横线和驼峰
+      },
+      preprocessorOptions: {
+        // scss: { additionalData: `@import "@/styles/vars.scss";` },
+        less: {
+          javascriptEnabled: true,
+          additionalData: `@import "@/styles/theme/default.less";`
+        }
       }
     }
-  },
-  server: {
-    hmr: true
-  },
-  plugins: [
-    vue(),
-    ViteComponents({
-      customComponentResolvers: [ AntDesignVueResolver() ]
-    }),
-    viteAntdTheme(options)
-  ]
 })

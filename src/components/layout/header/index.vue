@@ -40,6 +40,7 @@
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue'
 import SelectLanguage from '@/components/selectLanguage/index.vue'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 export default {
 	name: 'Header',
 	props: {
@@ -49,13 +50,15 @@ export default {
 		},
 	},
 	setup() {
+		const store = useStore()
+		const router = useRouter()
     const onClick = ({ key }) => {
 			const item = {
 				0: () => {},
 				1: () => {},
 				2: () => {
-					this.$store.dispatch('user/logout').then(() => {
-						this.$router.push({
+					store.dispatch('user/logout').then(() => {
+						router.push({
 							path: '/user/login',
 						})
 					})

@@ -45,7 +45,7 @@ export const asyncRouterMap = [
       {
         path: 'login',
         name: 'login',
-        component: () => import(/* webpackChunkName: "user" */ '@/views/user/login/index.vue')
+        component: () => import(/* webpackChunkName: "login" */ '@/views/user/login/index.vue')
       },
       // {
       //   path: 'register',

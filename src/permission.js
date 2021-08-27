@@ -46,7 +46,10 @@ router.beforeEach((to, from, next) => {
 			} else {
         next()
       }
-      store.dispatch('router/setRoutes', to)
+			console.log(to)
+      if (to.fullPath != '/') {
+				store.dispatch('router/setRoutes', to)
+			}
 		}
 	} else {
 		if (allowList.includes(to.name)) {
