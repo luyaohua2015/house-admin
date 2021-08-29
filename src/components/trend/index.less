@@ -1,0 +1,40 @@
+@import "../index";
+@font-size-base: 12px;
+.fang-pro-trend {
+  display: inline-block;
+  font-size: @font-size-base;
+  line-height: 22px;
+
+  .up,
+  .down {
+    margin-left: 4px;
+    position: relative;
+    top: 1px;
+
+    i {
+      font-size: 12px;
+      transform: scale(0.83);
+    }
+  }
+
+  .item-text {
+    display: inline-block;
+    margin-left: 8px;
+    color: rgba(0,0,0,.85);
+  }
+
+  .up {
+    color: #f5222d;
+  }
+  .down {
+    color: #52c41a;
+    top: -1px;
+  }
+
+  &.reverse-color .up {
+    color: #52c41a;
+  }
+  &.reverse-color .down {
+    color: #f5222d;
+  }
+}
