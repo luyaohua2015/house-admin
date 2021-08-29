@@ -1,18 +1,18 @@
 <template>
 	<a-layout-sider
-		:theme="layout === 'SideLayout' ? 'dark' : 'light'"
+		:theme="navTheme === 'black' ? 'dark' : layout === 'MixLayout' ? 'light' : navTheme"
 		v-model:collapsed="triggercollapsed"
 		collapsible
 		class="fang-side-bar"
 		:class="{'fixed-side-bar': fixedSidebar}"
 	>
-		<div class="logo" v-if="!hideLogo">
-			<a-typography-title  style="color: white" :level="4">刚需买房</a-typography-title>
+		<div class="logo" :class="navTheme" v-if="!hideLogo">
+			刚需买房
 		</div>
 		<div class="fang-menu">
 			<a-menu
 				id="fangMenu"
-				:theme="layout === 'SideLayout' ? 'dark' : 'light'"
+				:theme="navTheme === 'black' ? 'dark' : layout === 'MixLayout' ? 'light' : navTheme"
 				:openKeys="openKeys"
 				v-model:selectedKeys="selectedKeys"
 				@openChange="onOpenChange"
@@ -87,7 +87,7 @@ export default defineComponent({
 		}, {
 			deep: true
 		})
-
+    console.log(store.getters.style)
 		return {
 			...toRefs(state),
 			onOpenChange,
@@ -100,6 +100,7 @@ export default defineComponent({
 				state.selectedKeys = [route.name]
 				return menus
 			}),
+      navTheme: computed(() => store.getters.style),
 			handleClick: function ({ item, key, keyPath }) {
 				router.push({
 					path: `/${keyPath.join('/')}`
@@ -125,5 +126,19 @@ export default defineComponent({
 		position: fixed;
 		left: 0;
 	}
+  .logo {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 16px 16px;
+    line-height: 32px;
+    cursor: pointer;
+    &.dark {
+      color: #fff;
+    }
+  }
+  .fang-menu {
+    // flex: 1;
+  }
 }
 </style>

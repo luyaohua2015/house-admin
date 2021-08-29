@@ -36,29 +36,40 @@ const options = {
 };
 
 export default defineConfig({
-    resolve: {
-      alias: {
-        // 键必须以斜线开始和结束
-        '@': path.resolve(__dirname, './src')
-      }
-    },
-    plugins: [
-      vue(),
-      ViteComponents({
-        customComponentResolvers: [ AntDesignVueResolver() ]
-      }),
-      viteAntdTheme(options)
-    ],
-    css: {
-      modules: {
-        localsConvention: 'camelCase' // 默认只支持驼峰，修改为同事支持横线和驼峰
+  resolve: {
+    alias: {
+      // 键必须以斜线开始和结束
+      '@': path.resolve(__dirname, './src')
+    }
+  },
+  plugins: [
+    vue(),
+    ViteComponents({
+      customComponentResolvers: [ AntDesignVueResolver() ]
+    }),
+    viteAntdTheme(options)
+  ],
+  css: {
+    preprocessorOptions: {
+      // scss: { additionalData: `@import "@/styles/vars.scss";` },
+      less: {
+        javascriptEnabled: true,
+        math: 'always',
+        additionalData: `@import "@/styles/theme/default.less";`
       },
-      preprocessorOptions: {
-        // scss: { additionalData: `@import "@/styles/vars.scss";` },
-        less: {
-          javascriptEnabled: true,
-          additionalData: `@import "@/styles/theme/default.less";`
-        }
+      lessLoDER: {
+        
       }
     }
+  },
+  server: {
+    port: 3000,
+    proxy: {
+      '/index.php/': {
+        target: 'http://localhost:9000/index.php',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/index\.php/, '')
+      }
+    }
+  }
 })

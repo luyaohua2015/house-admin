@@ -1,6 +1,7 @@
 <template>
-	<a-layout-header class="fang-header">
-		<div class="fang-header-trigger">
+	<a-layout-header :class="`fang-header ${navTheme}`" :theme="navTheme === 'black' ? 'dark' : navTheme">
+		<div class="fang-header-box">
+      <div class="fang-header-trigger">
 			<menu-unfold-outlined v-if="collapsed" class="trigger" @click="() => $emit('update:collapsed', !collapsed)" />
 			<menu-fold-outlined v-else class="trigger" @click="() => $emit('update:collapsed', !collapsed)" />
 		</div>
@@ -33,6 +34,7 @@
 				<SelectLanguage />
 			</span>
 		</div>
+    </div>
 	</a-layout-header>
 </template>
 
@@ -41,6 +43,7 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue'
 import SelectLanguage from '@/components/selectLanguage/index.vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import { computed } from 'vue'
 export default {
 	name: 'Header',
 	props: {
@@ -67,7 +70,8 @@ export default {
 			item[key]()
 		}
     return {
-      onClick
+      onClick,
+      navTheme: computed(() => store.getters.style)
     }
   },
 	components: {
@@ -80,9 +84,18 @@ export default {
 
 <style lang="less" scoped>
 .fang-header {
-	background: #fff !important;
-	padding: 0;
-	box-shadow: 0 1px 4px rgb(0 21 41 / 8%);
+  &.light, &.dark {
+    .fang-account-name, span {
+      color: rgba(0, 0, 0, 0.65);
+    }
+  }
+  &-box {
+    position: relative;
+    height: 100%;
+    padding: 0 16px;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  }
 	&-trigger {
 		padding: 0 22px;
 		font-size: 20px;

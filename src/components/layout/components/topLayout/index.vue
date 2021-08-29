@@ -1,6 +1,6 @@
 <template>
 	<a-layout class="top-layout">
-    <a-layout-header class="top-layout-header">
+    <a-layout-header :class="`top-layout-header ${navTheme}`">
       <div class="logo">LOGO</div>
       <TopMenu />
     </a-layout-header>
@@ -15,13 +15,16 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
+import { useStore } from 'vuex'
 import TopMenu from './topMenu/index.vue'
 
 export default defineComponent({
 	setup() {
 		const collapsed = ref(false)
+    const store = useStore()
 		return {
+      navTheme: computed(() => store.getters.style),
 			collapsed
 		}
 	},
@@ -39,6 +42,9 @@ export default defineComponent({
   line-height: 48px;
   padding-left: 16px;
   padding-right: 0;
+  &.light {
+    background: #fff;
+  }
 }
 .top-layout-menu-tab {
   padding-top: 6px

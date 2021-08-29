@@ -8,27 +8,25 @@
   >
     <a-typography-title :level="5">整体风格设置</a-typography-title>
     <div class="style-setting">
-      <div class="style-setting-item style-setting-item-light" @click="chooseStyle('light')">
-        <CheckOutlined class="style-setting-item-checked" v-if="layout === 'light'"/>
-      </div>
-      <div class="style-setting-item style-setting-item-mix" @click="chooseStyle('mix')">
-        <CheckOutlined class="style-setting-item-checked" v-if="layout === 'dark'"/>
-      </div>
-      <div class="style-setting-item style-setting-item-dark" @click="chooseStyle('dark')">
-        <CheckOutlined class="style-setting-item-checked" v-if="layout === 'dark'"/>
-      </div>
+      <a-tooltip placement="top" v-for="item in themes" :key="item.title">
+        <template #title>
+          <span>{{item.title}}</span>
+        </template>
+        <div :class="`style-setting-item style-setting-item-${item.theme}`" @click="chooseStyle(item.theme)">
+          <CheckOutlined class="style-setting-item-checked" v-if="style === item.theme"/>
+        </div>
+      </a-tooltip>
     </div>
     <a-typography-title :level="5">导航模式</a-typography-title>
     <div class="nav-setting">
-      <div class="nav-setting-item nav-setting-item-side" @click="chooseLayout('SideLayout')">
-        <CheckOutlined class="nav-setting-item-checked" v-if="layout === 'SideLayout'"/>
-      </div>
-      <div class="nav-setting-item nav-setting-item-top" @click="chooseLayout('TopLayout')">
-        <CheckOutlined class="nav-setting-item-checked" v-if="layout === 'TopLayout'"/>
-      </div>
-      <div class="nav-setting-item nav-setting-item-mix" @click="chooseLayout('MixLayout')">
-        <CheckOutlined class="nav-setting-item-checked" v-if="layout === 'MixLayout'"/>
-      </div>
+      <a-tooltip placement="top" v-for="item in layouts" :key="item.title">
+        <template #title>
+          <span>{{item.title}}</span>
+        </template>
+        <div :class="`nav-setting-item nav-setting-item-${item.class}`" @click="chooseLayout(item.layout)">
+          <CheckOutlined class="nav-setting-item-checked" v-if="layout === item.layout"/>
+        </div>
+      </a-tooltip>
     </div>
     <div :style="{ marginBottom: '24px', marginTop: '24px' }">
       <a-typography-title :level="5">主题色</a-typography-title>
@@ -156,6 +154,40 @@ export default defineComponent({
       }
     ]
 
+    const themes = [
+      {
+        title: '亮色主题',
+        theme: 'light'
+      },
+      {
+        title: '暗色主题风格',
+        theme: 'dark'
+      },
+      {
+        title: '暗黑模式',
+        theme: 'black'
+      }
+    ]
+
+    const layouts = [
+      {
+        title: '侧边菜单布局',
+        class: 'side',
+        layout: 'SideLayout'
+      },
+      {
+        title: '顶部菜单布局',
+        class: 'top',
+        layout: 'TopLayout'
+      },
+      {
+        title: '混合布局',
+        class: 'mix',
+        layout: 'MixLayout'
+      }
+    ]
+
+
     const onChange = (item) => {
       const action = `app/set${item.key.charAt(0).toUpperCase()}${item.key.slice(1)}`
       if (item.key === 'fixedHeader') {
@@ -188,12 +220,14 @@ export default defineComponent({
 
 		return {
       layout: computed(() => store.getters.layout),
+      style: computed(() => store.getters.style),
+      themes,
+      layouts,
       visible,
       otherSetting,
       otherSettingOption,
       colorList,
       primaryColor: computed(() => store.getters.primaryColor),
-      style: computed(() => store.getters.style),
       afterVisibleChange,
       showDrawer,
       chooseLayout,
@@ -314,16 +348,18 @@ export default defineComponent({
       background-color: #fff;
       content: "";
     }
-    &-mix::before {
+    &-dark::before {
       background-color: #001529;
+      z-index: 1;
     }
-    &-mix::after {
+    &-dark::after {
+      background-color: #FFF;
+      z-index: 0;
+    }
+    &-black::after, &-black::before {
       background-color: transparent;
     }
-    &-dark::after, &-dark::before {
-      background-color: transparent;
-    }
-    &-dark {
+    &-black {
        background-color: #001529;
     }
   }

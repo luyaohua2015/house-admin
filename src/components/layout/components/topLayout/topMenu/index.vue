@@ -2,7 +2,7 @@
 	<div class="top-layout-menu">
     <a-menu
 		id="fangMenu"
-		theme="dark"
+		:theme="navTheme === 'black' ? 'dark' : navTheme"
 		v-model:selectedKeys="selectedKeys"
 		mode="horizontal"
 		@click="handleClick"
@@ -20,7 +20,7 @@
 			</template>
 		</a-sub-menu>
 	</a-menu>
-	<div class="fang-header-right">
+	<div :class="`fang-header-right ${navTheme}`">
 		<span class="fange-account">
 			<a-dropdown>
 				<span class="ant-dropdown-link">
@@ -112,6 +112,7 @@ export default defineComponent({
 				state.selectedKeys = [route.name]
 				return menus
 			}),
+      navTheme: computed(() => store.getters.style),
 			handleClick,
 			onClick
 		}
@@ -138,6 +139,11 @@ export default defineComponent({
 	height: 48px;
 	overflow: hidden;
   align-items: center;
+  &.light {
+    .fang-account-name, span {
+      color: rgba(0, 0, 0, 0.65);
+    }
+  }
 	.fang-account {
 		display: inline-block;
 		padding: 0 12px;

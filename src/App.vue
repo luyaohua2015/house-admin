@@ -19,4 +19,8 @@
 .ant-layout-footer {
   background: #f0f2f5 !important;
 }
+.ant-layout-header {
+  height: 48px !important;
+  line-height: 48px !important;
+}
 </style>

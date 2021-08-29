@@ -16,7 +16,7 @@
 					</a-form-item>
 
 					<a-form-item name="password">
-						<a-input placeholder="密码" size="large" v-model:value="form.password">
+						<a-input placeholder="密码" size="large" type="password" v-model:value="form.password">
 							<template #prefix>
 								<LockOutlined />
 							</template>
@@ -57,12 +57,13 @@
 <script>
 import { defineComponent, reactive, ref, toRaw } from 'vue'
 import { timeFix } from '@/utils/util'
+import { login } from '@/api/user'
 import { UserOutlined, LockOutlined, PhoneOutlined, MailOutlined } from '@ant-design/icons-vue'
 export default defineComponent({
 	setup() {
 		const form = reactive({
-			username: '',
-			password: '',
+			username: 'admin',
+			password: 'admin',
 			phone: '',
 			code: '',
 		})
@@ -132,6 +133,16 @@ export default defineComponent({
 			this.formRef
 				.validate()
 				.then(() => {
+          // login(
+          //   {
+          //       "username": "gzwkfdc",
+          //       "password": "1cbbccdd0622e3e9b165ddf1e401e843",
+          //       "grant_type": "password",
+          //       "client_id": "testclient",
+          //       "client_secret": "testpass",
+          //       "loginType": 1
+          //   }
+          // )
           this.$store.dispatch('user/login', toRaw(this.form)).then((res) => this.loginSuccess(res))
 				})
 				.catch((error) => {
